@@ -4,18 +4,20 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface QuizData {
   nome: string;
-  time: string;
-  posicao: string;
-  numero: string;
   foto?: File;
-  fotoPreview?: string; // base64 data URL para exibição
+  fotoPreview?: string;
+  nascimento_dia: string;
+  nascimento_mes: string;
+  nascimento_ano: string;
+  email: string;
+  clube: string;
+  peso: string;
+  altura: string;
 }
 
 interface QuizContextType {
   data: QuizData;
   setData: (data: Partial<QuizData>) => void;
-  pacote: number;
-  setPacote: (p: number) => void;
 }
 
 const QuizContext = createContext<QuizContextType | null>(null);
@@ -23,20 +25,23 @@ const QuizContext = createContext<QuizContextType | null>(null);
 export function QuizProvider({ children }: { children: ReactNode }) {
   const [data, setDataState] = useState<QuizData>({
     nome: "",
-    time: "",
-    posicao: "",
-    numero: "",
     foto: undefined,
     fotoPreview: undefined,
+    nascimento_dia: "",
+    nascimento_mes: "",
+    nascimento_ano: "",
+    email: "",
+    clube: "",
+    peso: "",
+    altura: "",
   });
-  const [pacote, setPacote] = useState(1);
 
   const setData = (partial: Partial<QuizData>) => {
     setDataState((prev) => ({ ...prev, ...partial }));
   };
 
   return (
-    <QuizContext.Provider value={{ data, setData, pacote, setPacote }}>
+    <QuizContext.Provider value={{ data, setData }}>
       {children}
     </QuizContext.Provider>
   );
