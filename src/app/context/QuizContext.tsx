@@ -7,14 +7,13 @@ export interface QuizData {
   time: string;
   posicao: string;
   numero: string;
-  foto?: string; // base64
+  foto?: File;
+  fotoPreview?: string; // base64 data URL para exibição
 }
 
 interface QuizContextType {
   data: QuizData;
   setData: (data: Partial<QuizData>) => void;
-  step: number;
-  setStep: (step: number) => void;
   pacote: number;
   setPacote: (p: number) => void;
 }
@@ -28,8 +27,8 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     posicao: "",
     numero: "",
     foto: undefined,
+    fotoPreview: undefined,
   });
-  const [step, setStep] = useState(0);
   const [pacote, setPacote] = useState(1);
 
   const setData = (partial: Partial<QuizData>) => {
@@ -37,7 +36,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <QuizContext.Provider value={{ data, setData, step, setStep, pacote, setPacote }}>
+    <QuizContext.Provider value={{ data, setData, pacote, setPacote }}>
       {children}
     </QuizContext.Provider>
   );

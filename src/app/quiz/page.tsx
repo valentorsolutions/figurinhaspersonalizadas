@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { QuizProvider, useQuiz } from "../context/QuizContext";
 
 const TIMES = [
-  { nome: "Brasil", emoji: "🇧🇷", cor: "#009c3b" },
-  { nome: "Argentina", emoji: "🇦🇷", cor: "#74ACDF" },
-  { nome: "Portugal", emoji: "🇵🇹", cor: "#006600" },
-  { nome: "França", emoji: "🇫🇷", cor: "#002395" },
-  { nome: "Espanha", emoji: "🇪🇸", cor: "#AA151B" },
-  { nome: "Alemanha", emoji: "🇩🇪", cor: "#1a1a1a" },
-  { nome: "Inglaterra", emoji: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", cor: "#CF0000" },
-  { nome: "Itália", emoji: "🇮🇹", cor: "#009246" },
+  { nome: "Brasil", emoji: "🇧🇷" },
+  { nome: "Argentina", emoji: "🇦🇷" },
+  { nome: "Portugal", emoji: "🇵🇹" },
+  { nome: "França", emoji: "🇫🇷" },
+  { nome: "Espanha", emoji: "🇪🇸" },
+  { nome: "Alemanha", emoji: "🇩🇪" },
+  { nome: "Inglaterra", emoji: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+  { nome: "Itália", emoji: "🇮🇹" },
 ];
 
 const POSICOES = [
@@ -22,15 +22,16 @@ const POSICOES = [
   { nome: "Atacante", emoji: "⚽", descricao: "O artilheiro temido" },
 ];
 
+/* ───── BARRA DE PROGRESSO ───── */
 function ProgressBar({ step, total }: { step: number; total: number }) {
-  const pct = Math.round(((step) / total) * 100);
+  const pct = Math.round((step / total) * 100);
   return (
     <div className="w-full max-w-md mx-auto mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "#003087", fontWeight: 700 }}>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "var(--copa-blue)", fontWeight: 700 }}>
           Etapa {step} de {total}
         </span>
-        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "13px", color: "#003087", fontWeight: 900 }}>
+        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "13px", color: "var(--copa-blue)", fontWeight: 900 }}>
           {pct}%
         </span>
       </div>
@@ -41,6 +42,7 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
   );
 }
 
+/* ───── STEP 1: NOME ───── */
 function StepNome({ onNext }: { onNext: () => void }) {
   const { data, setData } = useQuiz();
   const [error, setError] = useState("");
@@ -57,9 +59,7 @@ function StepNome({ onNext }: { onNext: () => void }) {
     <div className="animate-fadeInUp w-full max-w-md mx-auto">
       <div className="text-center mb-8">
         <div style={{ fontSize: "4rem", marginBottom: "12px" }}>👶</div>
-        <h2
-          style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "#003087", marginBottom: "8px" }}
-        >
+        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "var(--copa-blue)", marginBottom: "8px" }}>
           Qual o nome do seu craque?
         </h2>
         <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "15px" }}>
@@ -82,12 +82,8 @@ function StepNome({ onNext }: { onNext: () => void }) {
           onKeyDown={(e) => e.key === "Enter" && handleNext()}
           autoFocus
         />
-        {error && (
-          <p style={{ color: "#e53e3e", fontSize: "13px", marginTop: "6px", fontWeight: 600 }}>{error}</p>
-        )}
-        <p style={{ color: "#999", fontSize: "12px", marginTop: "6px", textAlign: "right" }}>
-          {data.nome.length}/20 caracteres
-        </p>
+        {error && <p style={{ color: "#e53e3e", fontSize: "13px", marginTop: "6px", fontWeight: 600 }}>{error}</p>}
+        <p style={{ color: "#999", fontSize: "12px", marginTop: "6px", textAlign: "right" }}>{data.nome.length}/20</p>
       </div>
 
       <button
@@ -102,6 +98,7 @@ function StepNome({ onNext }: { onNext: () => void }) {
   );
 }
 
+/* ───── STEP 2: TIME ───── */
 function StepTime({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { data, setData } = useQuiz();
 
@@ -109,7 +106,7 @@ function StepTime({ onNext, onBack }: { onNext: () => void; onBack: () => void }
     <div className="animate-fadeInUp w-full max-w-md mx-auto">
       <div className="text-center mb-6">
         <div style={{ fontSize: "4rem", marginBottom: "12px" }}>🏆</div>
-        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "#003087", marginBottom: "8px" }}>
+        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "var(--copa-blue)", marginBottom: "8px" }}>
           Qual o time do {data.nome || "coração"}?
         </h2>
         <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "15px" }}>
@@ -123,52 +120,30 @@ function StepTime({ onNext, onBack }: { onNext: () => void; onBack: () => void }
             key={time.nome}
             id={`btn-time-${time.nome.toLowerCase()}`}
             className={`quiz-option ${data.time === time.nome ? "selected" : ""}`}
-            style={{ padding: "16px", display: "flex", alignItems: "center", gap: "10px", textAlign: "left" }}
-            onClick={() => setData({ time: time.nome })}
+            style={{ padding: "16px", display: "flex", alignItems: "center", gap: "10px" }}
+            onClick={() => { setData({ time: time.nome }); onNext(); }}
           >
             <span style={{ fontSize: "1.8rem" }}>{time.emoji}</span>
             <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, color: "#1a1a1a", fontSize: "15px" }}>
               {time.nome}
             </span>
-            {data.time === time.nome && (
-              <span style={{ marginLeft: "auto", color: "#003087", fontSize: "1.2rem" }}>✓</span>
-            )}
+            {data.time === time.nome && <span style={{ marginLeft: "auto", color: "var(--copa-blue)" }}>✓</span>}
           </button>
         ))}
       </div>
 
-      <div className="flex gap-3">
-        <button
-          id="btn-voltar-time"
-          onClick={onBack}
-          style={{
-            flex: "0 0 auto",
-            padding: "14px 20px",
-            border: "2px solid #003087",
-            borderRadius: "12px",
-            background: "transparent",
-            color: "#003087",
-            fontWeight: 700,
-            cursor: "pointer",
-            fontFamily: "var(--font-body)",
-          }}
-        >
-          ← Voltar
-        </button>
-        <button
-          id="btn-proximo-time"
-          className="btn-primary"
-          style={{ flex: 1, fontSize: "16px", padding: "14px", animation: data.time ? "pulseGlow 2.5s ease-in-out infinite" : "none", opacity: data.time ? 1 : 0.5 }}
-          onClick={() => data.time && onNext()}
-          disabled={!data.time}
-        >
-          Próximo →
-        </button>
-      </div>
+      <button
+        id="btn-voltar-time"
+        onClick={onBack}
+        style={{ padding: "14px 20px", border: "2px solid var(--copa-blue)", borderRadius: "12px", background: "transparent", color: "var(--copa-blue)", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)", width: "100%" }}
+      >
+        ← Voltar
+      </button>
     </div>
   );
 }
 
+/* ───── STEP 3: POSIÇÃO ───── */
 function StepPosicao({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { data, setData } = useQuiz();
 
@@ -176,7 +151,7 @@ function StepPosicao({ onNext, onBack }: { onNext: () => void; onBack: () => voi
     <div className="animate-fadeInUp w-full max-w-md mx-auto">
       <div className="text-center mb-6">
         <div style={{ fontSize: "4rem", marginBottom: "12px" }}>🎽</div>
-        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "#003087", marginBottom: "8px" }}>
+        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "var(--copa-blue)", marginBottom: "8px" }}>
           Qual a posição favorita?
         </h2>
         <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "15px" }}>
@@ -190,47 +165,31 @@ function StepPosicao({ onNext, onBack }: { onNext: () => void; onBack: () => voi
             key={pos.nome}
             id={`btn-posicao-${pos.nome.toLowerCase()}`}
             className={`quiz-option ${data.posicao === pos.nome ? "selected" : ""}`}
-            style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px", textAlign: "left" }}
-            onClick={() => setData({ posicao: pos.nome })}
+            style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px" }}
+            onClick={() => { setData({ posicao: pos.nome }); onNext(); }}
           >
             <span style={{ fontSize: "2rem" }}>{pos.emoji}</span>
             <div style={{ flex: 1 }}>
-              <span style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, color: "#003087", fontSize: "16px", display: "block" }}>
-                {pos.nome}
-              </span>
-              <span style={{ fontFamily: "var(--font-body)", color: "#777", fontSize: "13px" }}>
-                {pos.descricao}
-              </span>
+              <span style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, color: "var(--copa-blue)", fontSize: "16px", display: "block" }}>{pos.nome}</span>
+              <span style={{ fontFamily: "var(--font-body)", color: "#777", fontSize: "13px" }}>{pos.descricao}</span>
             </div>
-            {data.posicao === pos.nome && (
-              <span style={{ color: "#003087", fontSize: "1.4rem" }}>✓</span>
-            )}
+            {data.posicao === pos.nome && <span style={{ color: "var(--copa-blue)", fontSize: "1.4rem" }}>✓</span>}
           </button>
         ))}
       </div>
 
-      <div className="flex gap-3">
-        <button
-          id="btn-voltar-posicao"
-          onClick={onBack}
-          style={{ flex: "0 0 auto", padding: "14px 20px", border: "2px solid #003087", borderRadius: "12px", background: "transparent", color: "#003087", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)" }}
-        >
-          ← Voltar
-        </button>
-        <button
-          id="btn-proximo-posicao"
-          className="btn-primary"
-          style={{ flex: 1, fontSize: "16px", padding: "14px", opacity: data.posicao ? 1 : 0.5 }}
-          onClick={() => data.posicao && onNext()}
-          disabled={!data.posicao}
-        >
-          Próximo →
-        </button>
-      </div>
+      <button
+        id="btn-voltar-posicao"
+        onClick={onBack}
+        style={{ padding: "14px 20px", border: "2px solid var(--copa-blue)", borderRadius: "12px", background: "transparent", color: "var(--copa-blue)", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)", width: "100%" }}
+      >
+        ← Voltar
+      </button>
     </div>
   );
 }
 
+/* ───── STEP 4: NÚMERO ───── */
 function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { data, setData } = useQuiz();
   const numeros = Array.from({ length: 23 }, (_, i) => i + 1);
@@ -239,7 +198,7 @@ function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void
     <div className="animate-fadeInUp w-full max-w-md mx-auto">
       <div className="text-center mb-6">
         <div style={{ fontSize: "4rem", marginBottom: "12px" }}>🔢</div>
-        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "#003087", marginBottom: "8px" }}>
+        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "var(--copa-blue)", marginBottom: "8px" }}>
           Qual o número da camisa?
         </h2>
         <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "15px" }}>
@@ -256,8 +215,8 @@ function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void
             style={{
               padding: "12px 0",
               borderRadius: "12px",
-              border: data.numero === String(n) ? "3px solid #003087" : "2px solid rgba(0,48,135,0.2)",
-              background: data.numero === String(n) ? "#003087" : "white",
+              border: data.numero === String(n) ? "3px solid var(--copa-blue)" : "2px solid rgba(0,48,135,0.2)",
+              background: data.numero === String(n) ? "var(--copa-blue)" : "white",
               color: data.numero === String(n) ? "white" : "#1a1a1a",
               fontFamily: "var(--font-titulo)",
               fontWeight: 900,
@@ -271,13 +230,7 @@ function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void
             {n}
           </button>
         ))}
-        {/* Número personalizado */}
-        <div
-          style={{
-            gridColumn: "span 5",
-            marginTop: "8px",
-          }}
-        >
+        <div style={{ gridColumn: "span 5", marginTop: "8px" }}>
           <input
             id="input-numero-custom"
             className="input-field"
@@ -293,7 +246,11 @@ function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void
       </div>
 
       <div className="flex gap-3">
-        <button id="btn-voltar-numero" onClick={onBack} style={{ flex: "0 0 auto", padding: "14px 20px", border: "2px solid #003087", borderRadius: "12px", background: "transparent", color: "#003087", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)" }}>
+        <button
+          id="btn-voltar-numero"
+          onClick={onBack}
+          style={{ flex: "0 0 auto", padding: "14px 20px", border: "2px solid var(--copa-blue)", borderRadius: "12px", background: "transparent", color: "var(--copa-blue)", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)" }}
+        >
           ← Voltar
         </button>
         <button
@@ -310,10 +267,87 @@ function StepNumero({ onNext, onBack }: { onNext: () => void; onBack: () => void
   );
 }
 
+/* ───── STEP 5: UPLOAD DE FOTO ───── */
+function StepFoto({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const { data, setData } = useQuiz();
+  const [preview, setPreview] = useState<string | null>(data.fotoPreview || null);
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setPreview(result);
+      setData({ foto: file, fotoPreview: result });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="animate-fadeInUp w-full max-w-md mx-auto">
+      <div className="text-center mb-6">
+        <div style={{ fontSize: "4rem", marginBottom: "12px" }}>📸</div>
+        <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "clamp(22px, 5vw, 30px)", color: "var(--copa-blue)", marginBottom: "8px" }}>
+          Foto do {data.nome || "craque"}
+        </h2>
+        <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "15px" }}>
+          Envie uma foto de rosto para aparecer na figurinha
+        </p>
+      </div>
+
+      <label
+        htmlFor="upload-foto"
+        className={`upload-area flex flex-col items-center justify-center gap-3 cursor-pointer mb-4 ${preview ? "" : ""}`}
+        style={{ padding: "32px 16px", minHeight: "180px" }}
+      >
+        {preview ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview} alt="Foto enviada" style={{ width: "120px", height: "120px", objectFit: "cover", borderRadius: "12px", boxShadow: "0 4px 16px rgba(0,0,0,0.2)" }} />
+            <span style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "var(--copa-blue)", fontWeight: 700 }}>✅ Foto carregada! Clique para trocar</span>
+          </>
+        ) : (
+          <>
+            <span style={{ fontSize: "3rem" }}>📁</span>
+            <span style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, color: "var(--copa-blue)", fontSize: "16px" }}>Selecionar foto</span>
+            <span style={{ fontFamily: "var(--font-body)", color: "#888", fontSize: "13px", textAlign: "center" }}>Toque aqui ou arraste a foto<br />JPG, PNG ou WEBP</span>
+          </>
+        )}
+      </label>
+      <input
+        id="upload-foto"
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+      />
+
+      <div className="flex gap-3">
+        <button
+          id="btn-voltar-foto"
+          onClick={onBack}
+          style={{ flex: "0 0 auto", padding: "14px 20px", border: "2px solid var(--copa-blue)", borderRadius: "12px", background: "transparent", color: "var(--copa-blue)", fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-body)" }}
+        >
+          ← Voltar
+        </button>
+        <button
+          id="btn-ver-preview"
+          className="btn-primary"
+          style={{ flex: 1, fontSize: "16px", padding: "14px", opacity: preview ? 1 : 0.5 }}
+          onClick={() => preview && onNext()}
+          disabled={!preview}
+        >
+          Ver minha figurinha! 🎉
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ───── FLUXO PRINCIPAL ───── */
 function QuizFlow() {
   const [step, setStep] = useState(1);
   const router = useRouter();
-  const TOTAL = 4;
+  const TOTAL = 5;
 
   const next = () => {
     if (step < TOTAL) setStep(step + 1);
@@ -327,15 +361,13 @@ function QuizFlow() {
   return (
     <main
       className="flex flex-col min-h-[100dvh] w-full"
-      style={{ background: "linear-gradient(180deg, #FFD700 0%, #FFE44D 40%, #FFF8CC 100%)" }}
+      style={{ background: "var(--copa-yellow)" }}
     >
       <div className="flex-1 flex flex-col px-5 py-8 max-w-xl mx-auto w-full">
-        {/* Logo topo */}
+        {/* Logo */}
         <div className="flex items-center gap-2 mb-6">
           <span style={{ fontSize: "1.5rem" }}>🏆</span>
-          <span
-            style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "16px", color: "#003087", letterSpacing: "0.05em" }}
-          >
+          <span style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, fontSize: "16px", color: "var(--copa-blue)", letterSpacing: "0.05em" }}>
             FIGURINHA COPA 2026
           </span>
         </div>
@@ -347,6 +379,7 @@ function QuizFlow() {
           {step === 2 && <StepTime onNext={next} onBack={back} />}
           {step === 3 && <StepPosicao onNext={next} onBack={back} />}
           {step === 4 && <StepNumero onNext={next} onBack={back} />}
+          {step === 5 && <StepFoto onNext={next} onBack={back} />}
         </div>
       </div>
     </main>

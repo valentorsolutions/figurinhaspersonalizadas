@@ -1,297 +1,129 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const CONFETTI_COLORS = ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#98D8C8"];
-
-interface ConfettiPiece {
-  id: number;
-  x: number;
-  color: string;
-  size: number;
-  duration: number;
-  delay: number;
-  shape: "rect" | "circle";
-}
-
-function Confetti() {
-  const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
-
-  useEffect(() => {
-    const newPieces: ConfettiPiece[] = Array.from({ length: 60 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-      size: Math.random() * 10 + 6,
-      duration: Math.random() * 3 + 2,
-      delay: Math.random() * 3,
-      shape: Math.random() > 0.5 ? "rect" : "circle",
-    }));
-    setPieces(newPieces);
-    const t = setTimeout(() => setPieces([]), 8000);
-    return () => clearTimeout(t);
-  }, []);
-
-  return (
-    <>
-      {pieces.map((p) => (
-        <div
-          key={p.id}
-          className="confetti-piece"
-          style={{
-            left: `${p.x}%`,
-            width: p.shape === "rect" ? `${p.size}px` : `${p.size}px`,
-            height: p.shape === "rect" ? `${p.size * 0.4}px` : `${p.size}px`,
-            background: p.color,
-            borderRadius: p.shape === "circle" ? "50%" : "2px",
-            animationDuration: `${p.duration}s`,
-            animationDelay: `${p.delay}s`,
-          }}
-        />
-      ))}
-    </>
-  );
-}
-
-const STEPS = [
-  { emoji: "✅", titulo: "Pedido confirmado", desc: "Seu pedido foi recebido com sucesso!" },
-  { emoji: "🎨", titulo: "Criando sua figurinha", desc: "Nossa equipe vai criar a arte personalizada" },
-  { emoji: "🖨️", titulo: "Impressão profissional", desc: "Impressão em alta qualidade" },
-  { emoji: "📦", titulo: "Enviando para você", desc: "Entrega em 7-10 dias úteis" },
-];
+const CHECKOUT_URL = "https://pay.cakto.com.br/figurinha-copa2026"; // substitua pelo link real
 
 export default function ObrigadoPage() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrentStep((s) => {
-        if (s >= STEPS.length - 1) {
-          if (intervalRef.current) clearInterval(intervalRef.current);
-          return s;
-        }
-        return s + 1;
-      });
-    }, 1500);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, []);
+  const handleWhatsApp = () => {
+    const texto = encodeURIComponent(
+      "🏆 Criei minha figurinha personalizada da Copa 2026! Você também pode criar a sua: https://figurinhaspersonalizadas.vercel.app"
+    );
+    window.open(`https://wa.me/?text=${texto}`, "_blank");
+  };
 
   return (
-    <main
-      className="flex flex-col items-center min-h-[100dvh] w-full"
-      style={{ background: "linear-gradient(160deg, #001a6b 0%, #003087 100%)" }}
+    <main className="flex flex-col items-center min-h-screen px-5 py-3 sm:py-8 overflow-hidden"
+      style={{ background: "var(--copa-yellow)" }}
     >
-      <Confetti />
+      {/* Figurinhas animadas */}
+      <div className="relative w-56 h-44 sm:w-80 sm:h-80 md:w-96 md:h-[400px] mb-1 sm:mb-2">
 
-      <div className="flex flex-col items-center w-full max-w-lg mx-auto px-5 py-12 text-center">
-        {/* Ícone de sucesso */}
+        {/* Esquerda */}
         <div
-          className="animate-bounceIn"
-          style={{
-            width: "100px",
-            height: "100px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #FFD700, #FFA500)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "3.5rem",
-            marginBottom: "24px",
-            boxShadow: "0 0 40px rgba(255,215,0,0.5)",
-          }}
+          className="absolute left-0 top-4 sm:top-6 md:top-8 w-24 h-36 sm:w-36 sm:h-52 md:w-48 md:h-72 rounded-xl overflow-hidden shadow-xl z-10"
+          style={{ transform: "rotate(-8deg)", animation: "wiggle 4s ease-in-out infinite" }}
         >
-          🏆
-        </div>
-
-        <h1
-          className="animate-fadeInUp"
-          style={{
-            fontFamily: "var(--font-titulo)",
-            fontWeight: 900,
-            fontSize: "clamp(26px, 6vw, 36px)",
-            color: "#FFD700",
-            marginBottom: "12px",
-            lineHeight: "1.2",
-          }}
-        >
-          Pedido Confirmado!
-        </h1>
-
-        <p
-          className="animate-fadeInUp"
-          style={{
-            fontFamily: "var(--font-body)",
-            color: "rgba(255,255,255,0.85)",
-            fontSize: "clamp(15px, 3.5vw, 18px)",
-            marginBottom: "32px",
-            lineHeight: "1.5",
-            animationDelay: "0.2s",
-            opacity: 0,
-          }}
-        >
-          Sua figurinha personalizada da Copa 2026 está sendo produzida! 🎉
-          Você receberá atualizações por e-mail e WhatsApp.
-        </p>
-
-        {/* Steps de progresso */}
-        <div
-          className="w-full mb-8 animate-fadeInUp"
-          style={{ animationDelay: "0.4s", opacity: 0 }}
-        >
-          <h2 style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, color: "white", fontSize: "16px", marginBottom: "16px", letterSpacing: "0.05em" }}>
-            ACOMPANHE SEU PEDIDO
-          </h2>
-          <div className="flex flex-col gap-3">
-            {STEPS.map((step, i) => {
-              const isDone = i <= currentStep;
-              const isActive = i === currentStep;
-              return (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    padding: "14px 16px",
-                    borderRadius: "14px",
-                    background: isDone
-                      ? "rgba(255,215,0,0.15)"
-                      : "rgba(255,255,255,0.05)",
-                    border: isActive
-                      ? "2px solid #FFD700"
-                      : isDone
-                      ? "2px solid rgba(255,215,0,0.4)"
-                      : "2px solid rgba(255,255,255,0.1)",
-                    transition: "all 0.5s ease",
-                    transform: isActive ? "scale(1.02)" : "scale(1)",
-                  }}
-                >
-                  <span style={{ fontSize: "1.8rem", opacity: isDone ? 1 : 0.4, transition: "opacity 0.5s" }}>
-                    {step.emoji}
-                  </span>
-                  <div style={{ textAlign: "left" }}>
-                    <div style={{ fontFamily: "var(--font-titulo)", fontWeight: 900, color: isDone ? "#FFD700" : "rgba(255,255,255,0.4)", fontSize: "15px", transition: "color 0.5s" }}>
-                      {step.titulo}
-                    </div>
-                    <div style={{ fontFamily: "var(--font-body)", color: isDone ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.3)", fontSize: "13px", transition: "color 0.5s" }}>
-                      {step.desc}
-                    </div>
-                  </div>
-                  {isDone && i < currentStep && (
-                    <div style={{ marginLeft: "auto", width: "24px", height: "24px", borderRadius: "50%", background: "#FFD700", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#003087", fontWeight: 900, fontSize: "14px" }}>
-                      ✓
-                    </div>
-                  )}
-                  {isActive && (
-                    <div style={{ marginLeft: "auto", width: "24px", height: "24px", border: "3px solid #FFD700", borderTopColor: "transparent", borderRadius: "50%", animation: "starSpin 0.8s linear infinite", flexShrink: 0 }} />
-                  )}
-                </div>
-              );
-            })}
+          <div className="relative w-full h-full">
+            <Image src="/figurinha-helena.webp" alt="Figurinha Helena" fill className="object-cover" loading="lazy" sizes="(max-width: 640px) 96px, (max-width: 768px) 144px, 192px" />
+            <div className="absolute inset-0 shine-effect" />
           </div>
         </div>
 
-        {/* WhatsApp CTA */}
+        {/* Centro */}
         <div
-          className="w-full animate-fadeInUp"
+          className="absolute left-1/2 -translate-x-1/2 top-0 w-28 h-44 sm:w-44 sm:h-64 md:w-60 md:h-[340px] rounded-xl overflow-hidden shadow-2xl z-30"
+          style={{ animation: "wiggleCenter 4s ease-in-out infinite 0.5s" }}
+        >
+          <div className="relative w-full h-full">
+            <Image src="/figurinha-miguel.webp" alt="Figurinha Miguel" fill className="object-cover" loading="lazy" sizes="(max-width: 640px) 112px, (max-width: 768px) 176px, 240px" />
+            <div className="absolute inset-0 shine-effect" style={{ animationDelay: "1s" }} />
+          </div>
+        </div>
+
+        {/* Direita */}
+        <div
+          className="absolute right-0 top-4 sm:top-6 md:top-8 w-24 h-36 sm:w-36 sm:h-52 md:w-48 md:h-72 rounded-xl overflow-hidden shadow-xl z-10"
+          style={{ transform: "rotate(8deg)", animation: "wiggleRight 4s ease-in-out infinite 1s" }}
+        >
+          <div className="relative w-full h-full">
+            <Image src="/figurinha-arthur.webp" alt="Figurinha Arthur" fill className="object-cover" loading="lazy" sizes="(max-width: 640px) 96px, (max-width: 768px) 144px, 192px" />
+            <div className="absolute inset-0 shine-effect" style={{ animationDelay: "2s" }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Conteúdo */}
+      <div className="w-full max-w-md flex flex-col items-center animate-fadeInUp">
+        <h1
+          className="text-3xl sm:text-5xl md:text-7xl font-black text-center tracking-[0.1em] mb-1"
+          style={{ fontFamily: "var(--font-titulo)", color: "var(--copa-blue)" }}
+        >
+          OBRIGADO!
+        </h1>
+
+        <span className="text-3xl sm:text-5xl mb-2 sm:mb-4">⚽</span>
+
+        <p className="text-base sm:text-xl text-center leading-relaxed mb-1 sm:mb-2"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Seu pagamento foi confirmado!
+        </p>
+
+        <p className="text-sm sm:text-lg text-center leading-relaxed mb-3 sm:mb-6"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Sua figurinha está prontinha pra baixar 🏆
+        </p>
+
+        {/* Botão principal */}
+        <a
+          href={CHECKOUT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-white text-xl md:text-2xl py-5 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer tracking-[0.1em] text-center flex items-center justify-center gap-2 mb-3 focus:outline-none focus:ring-2 focus:ring-offset-2"
           style={{
-            background: "rgba(37, 211, 102, 0.15)",
-            border: "2px solid rgba(37, 211, 102, 0.4)",
-            borderRadius: "16px",
-            padding: "20px",
-            marginBottom: "20px",
-            animationDelay: "0.6s",
-            opacity: 0,
+            fontFamily: "var(--font-titulo)",
+            fontWeight: 900,
+            background: "var(--copa-blue)",
+            animation: "pulseGlow 2.5s ease-in-out infinite",
           }}
         >
-          <p style={{ fontFamily: "var(--font-body)", color: "white", fontWeight: 700, fontSize: "15px", marginBottom: "12px" }}>
-            📱 Tem alguma dúvida? Fale conosco!
-          </p>
-          <a
-            id="btn-whatsapp"
-            href="https://wa.me/5511999999999?text=Olá!%20Acabei%20de%20fazer%20meu%20pedido%20da%20figurinha%20Copa%202026!"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              background: "#25D366",
-              color: "white",
-              fontFamily: "var(--font-titulo)",
-              fontWeight: 900,
-              fontSize: "18px",
-              padding: "14px",
-              borderRadius: "12px",
-              textDecoration: "none",
-              transition: "opacity 0.2s",
-            }}
-          >
-            <span style={{ fontSize: "1.5rem" }}>💬</span>
-            FALAR NO WHATSAPP
-          </a>
-        </div>
+          <span aria-hidden="true">🏆</span>
+          ACESSAR MINHA FIGURINHA
+          <span aria-hidden="true">→</span>
+        </a>
 
-        {/* Compartilhar */}
-        <div
-          className="w-full animate-fadeInUp"
-          style={{ animationDelay: "0.8s", opacity: 0 }}
+        {/* Botão WhatsApp */}
+        <button
+          id="btn-compartilhar-whatsapp"
+          onClick={handleWhatsApp}
+          className="w-full text-white font-black text-xl py-5 rounded-2xl shadow-lg transition-all duration-200 cursor-pointer tracking-[0.1em] flex items-center justify-center gap-3 mb-3"
+          style={{ fontFamily: "var(--font-titulo)", background: "#25D366" }}
         >
-          <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,255,255,0.6)", fontSize: "14px", marginBottom: "12px" }}>
-            Compartilhe e indique para seus amigos! 🎉
-          </p>
+          <svg viewBox="0 0 24 24" className="w-7 h-7 fill-white" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+          COMPARTILHAR COM AMIGOS
+        </button>
 
-          <button
-            id="btn-compartilhar"
-            onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: "Figurinha da Copa 2026",
-                  text: "Criei minha figurinha personalizada da Copa do Mundo 2026! Crie a sua também!",
-                  url: window.location.origin,
-                });
-              }
-            }}
-            style={{
-              width: "100%",
-              padding: "14px",
-              border: "2px solid rgba(255,255,255,0.3)",
-              borderRadius: "12px",
-              background: "transparent",
-              color: "white",
-              fontFamily: "var(--font-body)",
-              fontWeight: 700,
-              cursor: "pointer",
-              fontSize: "15px",
-              marginBottom: "12px",
-            }}
-          >
-            🔗 Compartilhar com amigos
-          </button>
-
-          <button
-            id="btn-nova-figurinha"
-            onClick={() => router.push("/")}
-            style={{
-              width: "100%",
-              padding: "14px",
-              border: "none",
-              borderRadius: "12px",
-              background: "rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.7)",
-              fontFamily: "var(--font-body)",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontSize: "14px",
-            }}
-          >
-            ← Criar nova figurinha
-          </button>
-        </div>
+        {/* Link criar nova */}
+        <button
+          id="btn-criar-nova"
+          onClick={() => router.push("/")}
+          className="w-full bg-transparent text-base py-3 rounded-2xl transition-all duration-200 cursor-pointer tracking-[0.1em] text-center block"
+          style={{
+            fontFamily: "var(--font-titulo)",
+            fontWeight: 700,
+            border: "2px solid var(--copa-blue)",
+            color: "var(--copa-blue)",
+          }}
+        >
+          CRIAR NOVA FIGURINHA
+        </button>
       </div>
     </main>
   );

@@ -14,6 +14,12 @@
   --font-body: 'Nunito', sans-serif;
 }
 
+/* Copa utility classes */
+.bg-copa-yellow { background-color: var(--copa-yellow); }
+.text-copa-blue { color: var(--copa-blue); }
+.text-copa-white { color: var(--copa-white); }
+.bg-copa-blue { background-color: var(--copa-blue); }
+
 * {
   box-sizing: border-box;
   margin: 0;
