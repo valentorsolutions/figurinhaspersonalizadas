@@ -152,7 +152,7 @@ function CheckoutContent() {
   const handleFileUpload = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = (e) => setData({ foto: e.target?.result as string });
+    reader.onload = (e) => setData({ foto: file, fotoPreview: e.target?.result as string });
     reader.readAsDataURL(file);
   }, [setData]);
 
@@ -246,11 +246,11 @@ function CheckoutContent() {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
           >
-            {data.foto ? (
+            {data.fotoPreview ? (
               <div className="flex flex-col items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={data.foto}
+                  src={data.fotoPreview}
                   alt="Preview"
                   style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "12px", border: "3px solid #FFD700" }}
                 />

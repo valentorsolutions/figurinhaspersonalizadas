@@ -205,7 +205,7 @@ function PreviewContent() {
             time={data.time}
             posicao={data.posicao}
             numero={data.numero}
-            foto={data.foto}
+            foto={data.fotoPreview}
           />
 
           {/* Glow atrás */}
