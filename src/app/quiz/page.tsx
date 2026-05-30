@@ -4,20 +4,20 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QuizProvider, useQuiz } from "../context/QuizContext";
 
-/* ───── BARRA DE PROGRESSO ───── */
+/* ───── BARRA DE PROGRESSO COLADA NO TOPO ───── */
 function ProgressBar({ step, total }: { step: number; total: number }) {
   const pct = Math.round((step / total) * 100);
   return (
-    <div className="w-full mb-4">
-      <div className="flex justify-between items-center mb-1 px-1">
-        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "16px", color: "var(--copa-blue)" }}>
+    <div className="w-full px-4 pt-4 pb-2">
+      <div className="flex justify-between items-center mb-1">
+        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "18px", color: "var(--copa-blue)" }}>
           Passo {step} de {total}
         </span>
-        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "16px", color: "var(--copa-blue)" }}>
+        <span style={{ fontFamily: "var(--font-titulo)", fontSize: "18px", color: "var(--copa-blue)" }}>
           {pct}%
         </span>
       </div>
-      <div className="h-3 bg-white rounded-full overflow-hidden border-2 border-white" style={{ boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)" }}>
+      <div className="h-3 bg-white rounded-full overflow-hidden border border-white/50 shadow-inner">
         <div className="h-full bg-copa-blue rounded-full transition-all duration-500 ease-out" style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -27,12 +27,12 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
 /* ───── PAGINAÇÃO DOTS ───── */
 function PaginationDots({ step, total }: { step: number; total: number }) {
   return (
-    <div className="flex justify-center gap-2 mt-4">
+    <div className="flex justify-center gap-2 mt-4 pb-6">
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
           className={`w-3 h-3 rounded-full transition-all duration-300 ${
-            i + 1 === step ? "bg-copa-blue scale-110" : "bg-white/50"
+            i + 1 === step ? "bg-copa-blue scale-125" : "bg-white/40"
           }`}
         />
       ))}
@@ -44,21 +44,21 @@ function PaginationDots({ step, total }: { step: number; total: number }) {
 function ModalAviso({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fadeIn">
-      <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-bounceIn">
-        <div className="p-5 text-center">
-          <h3 className="text-copa-blue text-3xl mb-4" style={{ fontFamily: "var(--font-titulo)" }}>AVISO</h3>
-          <div className="relative w-full aspect-square bg-copa-blue rounded-2xl overflow-hidden mb-4 border-4 border-copa-blue">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fadeIn">
+      <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-slide-up">
+        <div className="p-6 text-center">
+          <h3 className="text-copa-blue text-4xl mb-4" style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}>AVISO</h3>
+          <div className="relative w-full aspect-square bg-copa-blue rounded-2xl overflow-hidden mb-4 border-[6px] border-copa-blue shadow-lg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/aviso.png" alt="Aviso Foto" className="w-full h-full object-cover" />
           </div>
-          <p className="text-[#333] text-sm leading-relaxed font-bold px-2 mb-5" style={{ fontFamily: "var(--font-body)" }}>
-            A foto precisa ser <span className="text-copa-blue">somente da pessoa</span>, sem outras pessoas no enquadramento.
+          <p className="text-gray-600 text-[17px] leading-snug px-2 mb-6" style={{ fontFamily: "var(--font-body)" }}>
+            A foto precisa ser <span className="text-copa-blue font-black">somente da pessoa</span>, sem outras pessoas no enquadramento.
           </p>
           <button
             onClick={onClose}
-            className="w-full bg-copa-blue text-white text-2xl py-3 rounded-xl hover:bg-opacity-90 active:scale-95 transition-all"
-            style={{ fontFamily: "var(--font-titulo)" }}
+            className="w-full bg-copa-blue text-white text-3xl py-4 rounded-[14px] hover:bg-copa-blue/90 active:scale-95 transition-all shadow-md"
+            style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
           >
             ENTENDI
           </button>
@@ -84,10 +84,10 @@ function ModalLoadingFoto({ isOpen, onComplete }: { isOpen: boolean; onComplete:
       if (current >= 100) {
         current = 100;
         clearInterval(interval);
-        setTimeout(onComplete, 500); // delay before closing
+        setTimeout(onComplete, 600); // delay before closing
       }
       setProgress(current);
-    }, 300);
+    }, 250);
 
     return () => clearInterval(interval);
   }, [isOpen, onComplete]);
@@ -95,22 +95,22 @@ function ModalLoadingFoto({ isOpen, onComplete }: { isOpen: boolean; onComplete:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fadeIn">
-      <div className="bg-white rounded-3xl w-full max-w-sm p-6 text-center shadow-2xl">
-        <h3 className="text-copa-blue text-2xl mb-4" style={{ fontFamily: "var(--font-titulo)" }}>CARREGANDO FOTO</h3>
-        <div className="relative w-40 h-40 mx-auto rounded-2xl overflow-hidden mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fadeIn">
+      <div className="bg-white rounded-3xl w-full max-w-sm p-6 text-center shadow-2xl animate-slide-up">
+        <h3 className="text-copa-blue text-3xl mb-4 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>CARREGANDO FOTO</h3>
+        <div className="relative w-40 h-40 mx-auto rounded-2xl overflow-hidden mb-4 shadow-inner">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/aviso.png" alt="Loading" className="w-full h-full object-cover opacity-80" />
         </div>
-        <p className="text-sm font-bold text-[#444] mb-4" style={{ fontFamily: "var(--font-body)" }}>
+        <p className="text-gray-600 text-lg mb-6" style={{ fontFamily: "var(--font-body)" }}>
           Esse tem cara de jogador caro hein
         </p>
         <div className="w-full">
-          <div className="flex justify-between text-xs text-copa-blue font-bold mb-1">
+          <div className="flex justify-between text-sm text-copa-blue mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
             <span>Carregando...</span>
             <span>{progress}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
             <div className="h-full bg-copa-blue transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
         </div>
@@ -128,13 +128,11 @@ function StepNomeFoto({ onNext }: { onNext: () => void }) {
   const [error, setError] = useState("");
 
   const handleFileClick = () => {
-    // Show aviso modal first
     setShowAviso(true);
   };
 
   const onAvisoClose = () => {
     setShowAviso(false);
-    // After they understand, open file picker
     setTimeout(() => fileRef.current?.click(), 300);
   };
 
@@ -143,7 +141,6 @@ function StepNomeFoto({ onNext }: { onNext: () => void }) {
     const reader = new FileReader();
     reader.onload = (e) => {
       setData({ foto: file, fotoPreview: e.target?.result as string });
-      // Show fake loading screen
       setShowLoading(true);
     };
     reader.readAsDataURL(file);
@@ -156,58 +153,60 @@ function StepNomeFoto({ onNext }: { onNext: () => void }) {
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center">
-      <div className="text-4xl mb-1">✍️</div>
-      <h2 className="text-copa-blue text-3xl uppercase text-center mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
-        Qual o nome do craque?
+    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+      <div className="text-[40px] mb-1 animate-float-gentle">✍️</div>
+      <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
+        QUAL O NOME DO CRAQUE?
       </h2>
-      <p className="text-[#666] text-sm text-center mb-5" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-gray-500 text-[15px] text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
         O nome que vai aparecer na figurinha
       </p>
 
       <input
         type="text"
-        className="w-full border-2 border-gray-100 rounded-2xl px-4 py-3 text-[#333] mb-5 focus:border-copa-blue focus:outline-none transition-colors"
+        className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 text-lg mb-5 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-all placeholder:text-gray-400"
         placeholder="Nome e sobrenome"
-        style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
+        style={{ fontFamily: "var(--font-body)" }}
         value={data.nome}
         onChange={(e) => { setData({ nome: e.target.value }); setError(""); }}
       />
 
       <div className="w-full mb-6">
-        <h3 className="text-copa-blue text-xs uppercase mb-2 ml-1" style={{ fontFamily: "var(--font-titulo)" }}>FOTO DO CRAQUE</h3>
+        <h3 className="text-copa-blue text-sm mb-2 ml-1 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>FOTO DO CRAQUE</h3>
         
         {data.fotoPreview ? (
-          <div className="w-full border-2 border-copa-blue rounded-2xl p-4 flex flex-col items-center justify-center bg-blue-50/50 cursor-pointer" onClick={() => fileRef.current?.click()}>
-            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-copa-blue mb-2">
+          <div className="w-full border-2 border-copa-blue rounded-2xl p-4 flex flex-col items-center justify-center bg-blue-50/50 cursor-pointer shadow-sm" onClick={() => fileRef.current?.click()}>
+            <div className="w-24 h-24 rounded-full overflow-hidden border-[3px] border-copa-blue mb-2 shadow-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={data.fotoPreview} alt="Preview" className="w-full h-full object-cover" />
             </div>
-            <span className="text-copa-blue text-xs font-bold" style={{ fontFamily: "var(--font-titulo)" }}>Toque para trocar a foto</span>
+            <span className="text-copa-blue text-sm" style={{ fontFamily: "var(--font-titulo)" }}>Toque para trocar a foto</span>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">
-            <div className="border border-dashed border-gray-300 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50" onClick={handleFileClick}>
-              <span className="text-3xl mb-2">🖼️</span>
-              <span className="text-xs text-center font-bold text-[#333]" style={{ fontFamily: "var(--font-body)" }}>Enviar foto<br/>DO ROSTO,<br/>não de corpo</span>
+            <div className="border-[1.5px] border-dashed border-gray-300 rounded-[16px] p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-colors" onClick={handleFileClick}>
+              <span className="text-3xl mb-1">🖼️</span>
+              <span className="text-[13px] text-center text-gray-700 leading-tight" style={{ fontFamily: "var(--font-body)" }}>Enviar foto<br/>DO ROSTO,<br/>não de corpo</span>
             </div>
-            <div className="border border-dashed border-gray-300 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50" onClick={() => fileRef.current?.click()}>
-              <span className="text-3xl mb-2">📸</span>
-              <span className="text-sm font-bold text-[#333]" style={{ fontFamily: "var(--font-body)" }}>Câmera</span>
+            <div className="border-[1.5px] border-dashed border-gray-300 rounded-[16px] p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-colors" onClick={() => fileRef.current?.click()}>
+              <span className="text-3xl mb-1">📸</span>
+              <span className="text-[15px] text-gray-700" style={{ fontFamily: "var(--font-body)" }}>Câmera</span>
             </div>
           </div>
         )}
       </div>
 
-      {error && <p className="text-red-500 text-sm font-bold mb-3">{error}</p>}
+      {error && <p className="text-red-500 text-base mb-4" style={{ fontFamily: "var(--font-body)" }}>{error}</p>}
 
-      <button
-        onClick={handleNext}
-        className="w-full bg-copa-blue text-white text-2xl py-4 rounded-xl hover:bg-opacity-90 active:scale-95 transition-all"
-        style={{ fontFamily: "var(--font-titulo)" }}
-      >
-        PRÓXIMO &rarr;
-      </button>
+      <div className="mt-auto w-full pt-4">
+        <button
+          onClick={handleNext}
+          className="w-full bg-copa-blue text-white text-[28px] py-[18px] rounded-[14px] hover:bg-copa-blue/90 active:scale-[0.98] transition-all shadow-lg flex justify-center items-center gap-2"
+          style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
+        >
+          PRÓXIMO &rarr;
+        </button>
+      </div>
 
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])} />
       
@@ -233,21 +232,22 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center">
-      <div className="text-4xl mb-1">🎂</div>
-      <h2 className="text-copa-blue text-3xl uppercase text-center mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
+    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+      <div className="text-[40px] mb-1 animate-float-gentle">🎂</div>
+      <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         DATA DE NASCIMENTO
       </h2>
-      <p className="text-[#666] text-sm text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-gray-500 text-[15px] text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
         Pra calcular a idade na figurinha
       </p>
 
       <div className="w-full mb-5">
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>DIA</label>
+            <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>DIA</label>
             <select
-              className="w-full border border-gray-200 rounded-xl px-3 py-3 text-[#333] bg-white focus:outline-none"
+              className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-3 py-3.5 text-gray-700 bg-white focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none appearance-none"
+              style={{ fontFamily: "var(--font-body)" }}
               value={data.nascimento_dia}
               onChange={(e) => { setData({ nascimento_dia: e.target.value }); setError(""); }}
             >
@@ -256,9 +256,10 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
             </select>
           </div>
           <div>
-            <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>MÊS</label>
+            <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>MÊS</label>
             <select
-              className="w-full border border-gray-200 rounded-xl px-3 py-3 text-[#333] bg-white focus:outline-none"
+              className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-3 py-3.5 text-gray-700 bg-white focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none appearance-none"
+              style={{ fontFamily: "var(--font-body)" }}
               value={data.nascimento_mes}
               onChange={(e) => { setData({ nascimento_mes: e.target.value }); setError(""); }}
             >
@@ -267,9 +268,10 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
             </select>
           </div>
           <div>
-            <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>ANO</label>
+            <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>ANO</label>
             <select
-              className="w-full border border-gray-200 rounded-xl px-3 py-3 text-[#333] bg-white focus:outline-none"
+              className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-3 py-3.5 text-gray-700 bg-white focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none appearance-none"
+              style={{ fontFamily: "var(--font-body)" }}
               value={data.nascimento_ano}
               onChange={(e) => { setData({ nascimento_ano: e.target.value }); setError(""); }}
             >
@@ -281,31 +283,31 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
       </div>
 
       <div className="w-full mb-6">
-        <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>SEU MELHOR E-MAIL</label>
+        <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>SEU MELHOR E-MAIL</label>
         <input
           type="email"
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-[#333] focus:border-copa-blue focus:outline-none transition-colors"
+          className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
           placeholder="exemplo@email.com"
-          style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
+          style={{ fontFamily: "var(--font-body)" }}
           value={data.email}
           onChange={(e) => { setData({ email: e.target.value }); setError(""); }}
         />
       </div>
 
-      {error && <p className="text-red-500 text-sm font-bold mb-3">{error}</p>}
+      {error && <p className="text-red-500 text-base mb-4" style={{ fontFamily: "var(--font-body)" }}>{error}</p>}
 
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div className="mt-auto w-full pt-4 grid grid-cols-2 gap-3">
         <button
           onClick={onBack}
-          className="w-full border border-copa-blue text-copa-blue text-xl py-3 rounded-xl hover:bg-gray-50 active:scale-95 transition-all"
+          className="w-full border-[2px] border-copa-blue text-copa-blue text-[24px] py-[16px] rounded-[14px] hover:bg-gray-50 active:scale-[0.98] transition-all"
           style={{ fontFamily: "var(--font-titulo)" }}
         >
           VOLTAR
         </button>
         <button
           onClick={handleNext}
-          className="w-full bg-copa-blue text-white text-xl py-3 rounded-xl hover:bg-opacity-90 active:scale-95 transition-all"
-          style={{ fontFamily: "var(--font-titulo)" }}
+          className="w-full bg-copa-blue text-white text-[24px] py-[16px] rounded-[14px] hover:bg-copa-blue/90 active:scale-[0.98] transition-all shadow-md flex justify-center items-center gap-2"
+          style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
         >
           PRÓXIMO &rarr;
         </button>
@@ -325,22 +327,22 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center">
-      <div className="text-4xl mb-1">⭐</div>
-      <h2 className="text-copa-blue text-3xl uppercase text-center mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
+    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+      <div className="text-[40px] mb-1 animate-float-gentle">⭐</div>
+      <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         CLUBE E DADOS
       </h2>
-      <p className="text-[#666] text-sm text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-gray-500 text-[15px] text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
         O clube do coração e os dados pra figurinha
       </p>
 
       <div className="w-full mb-4">
-        <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE DO CORAÇÃO</label>
+        <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE DO CORAÇÃO</label>
         <input
           type="text"
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-[#333] focus:border-copa-blue focus:outline-none transition-colors"
+          className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
           placeholder="Digite o nome do clube..."
-          style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
+          style={{ fontFamily: "var(--font-body)" }}
           value={data.clube}
           onChange={(e) => { setData({ clube: e.target.value }); setError(""); }}
         />
@@ -348,43 +350,43 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
 
       <div className="w-full grid grid-cols-2 gap-3 mb-6">
         <div>
-          <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>PESO (KG)</label>
+          <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>PESO (KG)</label>
           <input
             type="number"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-[#333] focus:border-copa-blue focus:outline-none transition-colors"
+            className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
             placeholder="ex: 25"
-            style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
+            style={{ fontFamily: "var(--font-body)" }}
             value={data.peso}
             onChange={(e) => { setData({ peso: e.target.value }); setError(""); }}
           />
         </div>
         <div>
-          <label className="text-copa-blue text-[10px] uppercase ml-1 block mb-1" style={{ fontFamily: "var(--font-titulo)" }}>ALTURA (CM)</label>
+          <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>ALTURA (CM)</label>
           <input
             type="number"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-[#333] focus:border-copa-blue focus:outline-none transition-colors"
+            className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
             placeholder="ex: 120"
-            style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
+            style={{ fontFamily: "var(--font-body)" }}
             value={data.altura}
             onChange={(e) => { setData({ altura: e.target.value }); setError(""); }}
           />
         </div>
       </div>
 
-      {error && <p className="text-red-500 text-sm font-bold mb-3">{error}</p>}
+      {error && <p className="text-red-500 text-base mb-4" style={{ fontFamily: "var(--font-body)" }}>{error}</p>}
 
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div className="mt-auto w-full pt-4 grid grid-cols-2 gap-3">
         <button
           onClick={onBack}
-          className="w-full border border-copa-blue text-copa-blue text-xl py-3 rounded-xl hover:bg-gray-50 active:scale-95 transition-all"
+          className="w-full border-[2px] border-copa-blue text-copa-blue text-[24px] py-[16px] rounded-[14px] hover:bg-gray-50 active:scale-[0.98] transition-all"
           style={{ fontFamily: "var(--font-titulo)" }}
         >
           VOLTAR
         </button>
         <button
           onClick={handleNext}
-          className="w-full bg-copa-blue text-white text-xl py-3 rounded-xl hover:bg-opacity-90 active:scale-95 transition-all"
-          style={{ fontFamily: "var(--font-titulo)" }}
+          className="w-full bg-copa-blue text-white text-[24px] py-[16px] rounded-[14px] hover:bg-copa-blue/90 active:scale-[0.98] transition-all shadow-md flex justify-center items-center gap-2"
+          style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
         >
           PRÓXIMO &rarr;
         </button>
@@ -398,62 +400,64 @@ function StepConfirmacao({ onNext, onBack }: { onNext: () => void; onBack: () =>
   const { data } = useQuiz();
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center">
-      <div className="text-4xl mb-1">⚠️</div>
-      <h2 className="text-copa-blue text-3xl uppercase text-center mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
+    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+      <div className="text-[40px] mb-1 animate-float-gentle">⚠️</div>
+      <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         CONFIRA SEUS DADOS
       </h2>
-      <p className="text-[#666] text-xs text-center mb-2 px-2" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-gray-500 text-[14px] text-center mb-2 px-2" style={{ fontFamily: "var(--font-body)" }}>
         A figurinha será gerada em breve. Revise os dados abaixo com atenção.
       </p>
-      <p className="text-copa-blue text-xs text-center mb-5 font-bold" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-copa-blue text-[15px] text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
         Não fazemos alterações após a aprovação e pagamento.
       </p>
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-20 h-20 rounded-full border-2 border-copa-blue overflow-hidden flex-shrink-0 shadow-lg">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-[4px] border-copa-blue overflow-hidden flex-shrink-0 shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {data.fotoPreview && <img src={data.fotoPreview} alt="Rosto" className="w-full h-full object-cover" />}
         </div>
-        <p className="text-xs font-bold text-[#555] uppercase" style={{ fontFamily: "var(--font-body)", maxWidth: "120px" }}>
+        <p className="text-[13px] text-gray-700 uppercase" style={{ fontFamily: "var(--font-titulo)", maxWidth: "140px", letterSpacing: "0.05em", lineHeight: 1.2 }}>
           VERIFIQUE SE O ROSTO ESTÁ PRÓXIMO
         </p>
       </div>
 
-      <div className="w-full bg-gray-50 rounded-2xl p-4 mb-6">
-        <div className="flex justify-between items-center py-2 border-b border-gray-200">
-          <span className="text-copa-blue text-xs" style={{ fontFamily: "var(--font-titulo)" }}>NOME</span>
-          <span className="text-[#333] text-sm font-bold" style={{ fontFamily: "var(--font-body)" }}>{data.nome}</span>
+      <div className="w-full bg-gray-50 rounded-[16px] p-4 mb-6 border border-gray-100">
+        <div className="flex justify-between items-center py-2.5 border-b border-gray-200">
+          <span className="text-copa-blue text-sm tracking-widest" style={{ fontFamily: "var(--font-titulo)" }}>NOME</span>
+          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{data.nome}</span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-gray-200">
-          <span className="text-copa-blue text-xs" style={{ fontFamily: "var(--font-titulo)" }}>PESO</span>
-          <span className="text-[#333] text-sm font-bold" style={{ fontFamily: "var(--font-body)" }}>{data.peso} kg</span>
+        <div className="flex justify-between items-center py-2.5 border-b border-gray-200">
+          <span className="text-copa-blue text-sm tracking-widest" style={{ fontFamily: "var(--font-titulo)" }}>PESO</span>
+          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{data.peso} kg</span>
         </div>
-        <div className="flex justify-between items-center py-2 border-b border-gray-200">
-          <span className="text-copa-blue text-xs" style={{ fontFamily: "var(--font-titulo)" }}>ALTURA</span>
-          <span className="text-[#333] text-sm font-bold" style={{ fontFamily: "var(--font-body)" }}>{data.altura} cm</span>
+        <div className="flex justify-between items-center py-2.5 border-b border-gray-200">
+          <span className="text-copa-blue text-sm tracking-widest" style={{ fontFamily: "var(--font-titulo)" }}>ALTURA</span>
+          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{data.altura} cm</span>
         </div>
-        <div className="flex justify-between items-center py-2">
-          <span className="text-copa-blue text-xs" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE</span>
-          <span className="text-[#333] text-sm font-bold" style={{ fontFamily: "var(--font-body)" }}>{data.clube}</span>
+        <div className="flex justify-between items-center py-2.5">
+          <span className="text-copa-blue text-sm tracking-widest" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE</span>
+          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{data.clube}</span>
         </div>
       </div>
 
-      <button
-        onClick={onNext}
-        className="w-full bg-copa-blue text-white text-xl py-4 rounded-xl hover:bg-opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 mb-3"
-        style={{ fontFamily: "var(--font-titulo)" }}
-      >
-        ENTENDI, GERAR FIGURINHA ⚽
-      </button>
+      <div className="mt-auto w-full pt-2">
+        <button
+          onClick={onNext}
+          className="w-full bg-copa-blue text-white text-[24px] sm:text-[28px] py-[18px] rounded-[14px] hover:bg-copa-blue/90 active:scale-[0.98] transition-all shadow-xl mb-4"
+          style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
+        >
+          ENTENDI, GERAR FIGURINHA ⚽
+        </button>
 
-      <button
-        onClick={onBack}
-        className="w-full border border-gray-300 text-[#555] text-sm py-3 rounded-xl hover:bg-gray-50 active:scale-95 transition-all"
-        style={{ fontFamily: "var(--font-titulo)" }}
-      >
-        CORRIGIR DADOS
-      </button>
+        <button
+          onClick={onBack}
+          className="w-full border-[1.5px] border-gray-300 text-gray-500 text-[20px] py-[14px] rounded-[14px] hover:bg-gray-50 active:scale-[0.98] transition-all"
+          style={{ fontFamily: "var(--font-titulo)" }}
+        >
+          CORRIGIR DADOS
+        </button>
+      </div>
     </div>
   );
 }
@@ -464,61 +468,61 @@ function StepVSLLoading() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Aumenta devagar o progresso, simulando geração. Tempo total ~30s para efeito de teste.
-    // Num cenário real, dura o tempo do pitch de vendas do vídeo (ex: 2 min).
     const interval = setInterval(() => {
       setProgress(p => {
         const next = p + 1;
         if (next >= 100) {
           clearInterval(interval);
-          setTimeout(() => router.push("/checkout"), 500); // Manda para oferta final
+          setTimeout(() => router.push("/checkout"), 500); 
           return 100;
         }
         return next;
       });
-    }, 200); // 1% a cada 200ms = 20s total
+    }, 250); 
 
     return () => clearInterval(interval);
   }, [router]);
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center pt-2">
-      <h2 className="text-copa-blue text-3xl uppercase text-center mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
+    <div className="animate-fadeIn w-full flex flex-col items-center pt-2 h-full">
+      <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         GERANDO SUA FIGURINHA
       </h2>
-      <p className="text-[#333] text-sm text-center font-bold mb-6" style={{ fontFamily: "var(--font-body)" }}>
+      <p className="text-gray-700 text-[15px] text-center mb-6" style={{ fontFamily: "var(--font-body)" }}>
         Não saia dessa tela, leva até 2 minutos.
       </p>
 
       {/* Placeholder de Vídeo */}
-      <div className="w-full aspect-[9/16] max-w-[280px] bg-purple-600 rounded-xl flex flex-col items-center justify-center text-white mb-6 p-4 text-center shadow-lg">
-        <p className="font-bold mb-4" style={{ fontFamily: "var(--font-body)" }}>Você já começou a assistir esse vídeo</p>
-        <button className="flex items-center gap-2 border border-white/50 px-4 py-2 rounded-full text-sm mb-2 hover:bg-white/10">
-          ▶️ Continuar assistindo?
+      <div className="w-full max-w-[280px] aspect-[9/16] bg-[#7c3aed] rounded-[16px] flex flex-col items-center justify-center text-white mb-6 p-4 text-center shadow-xl">
+        <p className="text-[17px] mb-5 leading-tight px-4" style={{ fontFamily: "var(--font-body)" }}>Você já começou a assistir esse vídeo</p>
+        <button className="flex items-center justify-center gap-2 border border-white/40 bg-white/10 px-5 py-2.5 rounded-full text-[13px] mb-3 hover:bg-white/20 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
+          ▶ Continuar assistindo?
         </button>
-        <button className="flex items-center gap-2 border border-white/50 px-4 py-2 rounded-full text-sm hover:bg-white/10">
-          🔄 Assistir do início?
+        <button className="flex items-center justify-center gap-2 border border-white/40 bg-white/10 px-5 py-2.5 rounded-full text-[13px] hover:bg-white/20 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
+          ↺ Assistir do início?
         </button>
       </div>
 
-      <p className="text-copa-blue font-bold text-center mb-1" style={{ fontFamily: "var(--font-titulo)", fontSize: "18px" }}>
-        Adquira sua figurinha HOJE e concorra a
-      </p>
-      <p className="text-green-600 font-bold text-center text-3xl mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
-        MIL REAIS
-      </p>
-      <p className="text-copa-blue font-bold text-center text-sm mb-6" style={{ fontFamily: "var(--font-titulo)" }}>
-        no dia 11/06/2026 início dos jogos.
-      </p>
+      <div className="mt-auto w-full flex flex-col items-center pb-2">
+        <p className="text-copa-blue text-[20px] text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
+          Adquira sua figurinha HOJE e concorra a
+        </p>
+        <p className="text-green-600 text-[36px] text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
+          MIL REAIS
+        </p>
+        <p className="text-copa-blue text-[14px] text-center mb-6 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
+          no dia 11/06/2026 início dos jogos.
+        </p>
 
-      {/* Progress Footer */}
-      <div className="w-full mt-auto">
-        <div className="flex justify-between text-copa-blue text-xs font-bold mb-1" style={{ fontFamily: "var(--font-titulo)" }}>
-          <span>{Math.floor((progress / 100) * 120)}s</span>
-          <span>{progress}%</span>
-        </div>
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div className="h-full bg-copa-blue transition-all duration-300" style={{ width: `${progress}%` }} />
+        {/* Progress Footer */}
+        <div className="w-full">
+          <div className="flex justify-between text-copa-blue text-xs mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>
+            <span>{Math.floor((progress / 100) * 120)}s</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+            <div className="h-full bg-copa-blue transition-all duration-300" style={{ width: `${progress}%` }} />
+          </div>
         </div>
       </div>
     </div>
@@ -529,10 +533,10 @@ function StepVSLLoading() {
 function QuizFlow() {
   const [step, setStep] = useState(1);
   const router = useRouter();
-  const TOTAL = 4; // VSL is not counted in progress dots
+  const TOTAL = 4;
 
   const next = () => {
-    if (step < 5) setStep(step + 1); // step 5 is VSL
+    if (step < 5) setStep(step + 1); 
   };
   const back = () => {
     if (step > 1) setStep(step - 1);
@@ -540,13 +544,13 @@ function QuizFlow() {
   };
 
   return (
-    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow p-4 sm:p-6 pb-8">
-      <div className="w-full max-w-md mx-auto flex flex-col h-full items-center">
+    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow">
+      <div className="w-full max-w-lg mx-auto flex flex-col min-h-screen relative">
         
         {step <= 4 && <ProgressBar step={step} total={TOTAL} />}
 
-        {/* White Card */}
-        <div className="w-full bg-white rounded-[32px] p-6 shadow-2xl mt-2 relative min-h-[400px] flex flex-col">
+        {/* White Card encostando nas laterais no mobile, com borda arredondada estilo app */}
+        <div className="w-full flex-1 bg-white rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl relative flex flex-col sm:mt-2 sm:mb-8 sm:mx-auto">
           {step === 1 && <StepNomeFoto onNext={next} />}
           {step === 2 && <StepNascimento onNext={next} onBack={back} />}
           {step === 3 && <StepClubeMedidas onNext={next} onBack={back} />}
@@ -554,7 +558,16 @@ function QuizFlow() {
           {step === 5 && <StepVSLLoading />}
         </div>
 
-        {step <= 4 && <PaginationDots step={step} total={TOTAL} />}
+        {step <= 4 && (
+          <div className="absolute bottom-0 left-0 w-full pb-4 sm:hidden bg-white">
+            <PaginationDots step={step} total={TOTAL} />
+          </div>
+        )}
+        {step <= 4 && (
+          <div className="hidden sm:block">
+            <PaginationDots step={step} total={TOTAL} />
+          </div>
+        )}
       </div>
     </main>
   );

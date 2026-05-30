@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'SummerCrush';
+  src: url('/fonts/papernotes/SummerCrush.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CBF';
+  src: url('/fonts/CBFHomeAway2026.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --copa-yellow: #FFD700;
   --copa-yellow-dark: #E6C200;
@@ -9,8 +25,8 @@
   --copa-green: #009c3b;
   --copa-white: #FFFFFF;
   --copa-gold: #C9A227;
-  --font-titulo: 'Squada One', sans-serif;
-  --font-body: 'Kalam', cursive;
+  --font-titulo: 'CBF', sans-serif;
+  --font-body: 'SummerCrush', cursive;
 }
 
 /* Copa utility classes */

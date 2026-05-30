@@ -14,46 +14,46 @@ export default function HomePage() {
         
         {/* Título */}
         <h1
-          className="text-4xl sm:text-5xl md:text-6xl uppercase leading-[0.95] mb-4 tracking-wide text-copa-blue"
-          style={{ fontFamily: "var(--font-titulo)", textShadow: "1px 1px 0px rgba(0,0,0,0.1)" }}
+          className="text-[44px] leading-[0.95] mb-2 tracking-wide text-copa-blue uppercase"
+          style={{ fontFamily: "var(--font-titulo)" }}
         >
           Transforme seu filho em uma <br/>
-          figurinha personalizada da <br/>
+          <span className="text-copa-blue">figurinha personalizada</span> da <br/>
           Copa do Mundo
         </h1>
 
         {/* Figurinhas animadas (Sobrepostas) */}
-        <div className="relative w-full max-w-[320px] aspect-[4/3] mb-6 mt-2 flex justify-center">
+        <div className="relative w-full max-w-[320px] aspect-[4/3] mb-6 mt-4 flex justify-center">
 
           {/* Figurinha esquerda (Arthur) */}
           <div
-            className="absolute left-4 top-8 w-32 sm:w-40 aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-xl z-10"
-            style={{ transform: "rotate(-5deg)", animation: "wiggle 4s ease-in-out infinite" }}
+            className="absolute left-2 top-8 w-[130px] aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-xl z-10"
+            style={{ transform: "rotate(-8deg)", animation: "wiggle 4s ease-in-out infinite" }}
           >
             <div className="relative w-full h-full">
-              <Image src="/figurinha-arthur.webp" alt="Arthur" fill className="object-cover" sizes="(max-width: 640px) 128px, 160px" priority />
+              <Image src="/figurinha-arthur.webp" alt="Arthur" fill className="object-cover" sizes="130px" priority />
               <div className="absolute inset-0 shine-effect" />
             </div>
           </div>
 
           {/* Figurinha direita (Helena) */}
           <div
-            className="absolute right-4 top-8 w-32 sm:w-40 aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-xl z-10"
-            style={{ transform: "rotate(5deg)", animation: "wiggleRight 4s ease-in-out infinite 1s" }}
+            className="absolute right-2 top-8 w-[130px] aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-xl z-10"
+            style={{ transform: "rotate(8deg)", animation: "wiggleRight 4s ease-in-out infinite 1s" }}
           >
             <div className="relative w-full h-full">
-              <Image src="/figurinha-helena.webp" alt="Helena" fill className="object-cover" sizes="(max-width: 640px) 128px, 160px" priority />
+              <Image src="/figurinha-helena.webp" alt="Helena" fill className="object-cover" sizes="130px" priority />
               <div className="absolute inset-0 shine-effect" style={{ animationDelay: "2s" }} />
             </div>
           </div>
 
           {/* Figurinha central (Miguel) */}
           <div
-            className="absolute left-1/2 -translate-x-1/2 top-0 w-40 sm:w-48 aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-2xl z-30"
+            className="absolute left-1/2 -translate-x-1/2 top-0 w-[150px] aspect-[2.5/3.5] rounded-xl overflow-hidden shadow-2xl z-30"
             style={{ animation: "wiggleCenter 4s ease-in-out infinite 0.5s" }}
           >
             <div className="relative w-full h-full">
-              <Image src="/figurinha-miguel.webp" alt="Miguel" fill className="object-cover" sizes="(max-width: 640px) 160px, 192px" priority />
+              <Image src="/figurinha-miguel.webp" alt="Miguel" fill className="object-cover" sizes="150px" priority />
               <div className="absolute inset-0 shine-effect" style={{ animationDelay: "1s" }} />
             </div>
           </div>
@@ -62,7 +62,7 @@ export default function HomePage() {
 
         {/* Subtítulo */}
         <p
-          className="text-lg md:text-xl text-copa-blue mb-6 leading-relaxed px-2 font-bold"
+          className="text-[17px] text-gray-800 mb-6 leading-snug px-2"
           style={{ fontFamily: "var(--font-body)" }}
         >
           Responda algumas perguntas rápidas e veja como criar uma figurinha exclusiva, com o nome, foto e estilo do seu pequeno craque.
@@ -71,10 +71,11 @@ export default function HomePage() {
         {/* Botão CTA */}
         <button
           id="btn-iniciar"
-          className="w-full text-white text-3xl py-4 rounded-2xl shadow-lg transition-transform duration-200 cursor-pointer tracking-wider hover:scale-[1.02] active:scale-95"
+          className="w-full text-white text-[28px] py-[18px] rounded-[14px] shadow-lg transition-transform duration-200 cursor-pointer hover:scale-[1.02] active:scale-95"
           style={{
             fontFamily: "var(--font-titulo)",
             background: "var(--copa-blue)",
+            letterSpacing: "0.05em"
           }}
           onClick={() => router.push("/quiz")}
         >
@@ -82,12 +83,12 @@ export default function HomePage() {
         </button>
 
         {/* Prova social */}
-        <div className="mt-8 flex flex-col items-center gap-2">
-          <div className="flex -space-x-1">
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <div className="flex -space-x-1.5">
             {BANDEIRAS.map((flag, i) => (
               <span
                 key={i}
-                className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-xs font-bold text-copa-blue border border-gray-200"
+                className="w-[30px] h-[30px] rounded-full bg-white flex items-center justify-center text-[10px] text-copa-blue border border-gray-200 shadow-sm"
                 style={{ fontFamily: "var(--font-titulo)", zIndex: 5 - i }}
               >
                 {flag}
@@ -95,8 +96,8 @@ export default function HomePage() {
             ))}
           </div>
           <p
-            className="text-sm font-bold text-copa-blue"
-            style={{ fontFamily: "var(--font-titulo)", letterSpacing: "0.05em" }}
+            className="text-[13px] text-gray-800"
+            style={{ fontFamily: "var(--font-body)" }}
           >
             +2.500 figurinhas já criadas!
           </p>
