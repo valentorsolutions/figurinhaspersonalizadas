@@ -153,7 +153,7 @@ function StepNomeFoto({ onNext }: { onNext: () => void }) {
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+    <div className="animate-fadeIn w-full flex flex-col items-center flex-1 min-h-0">
       <div className="text-[40px] mb-1 animate-float-gentle">✍️</div>
       <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         QUAL O NOME DO CRAQUE?
@@ -235,7 +235,7 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+    <div className="animate-fadeIn w-full flex flex-col items-center flex-1 min-h-0">
       <div className="text-[40px] mb-1 animate-float-gentle">🎂</div>
       <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         DATA DE NASCIMENTO
@@ -351,7 +351,7 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
   };
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+    <div className="animate-fadeIn w-full flex flex-col items-center flex-1 min-h-0">
       <div className="text-[40px] mb-1 animate-float-gentle">⭐</div>
       <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         CLUBE E DADOS
@@ -441,7 +441,7 @@ function StepConfirmacao({ onNext, onBack }: { onNext: () => void; onBack: () =>
   const clubeExibir = data.clube === "Outro" ? data.clubeCustom : data.clube;
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center h-full">
+    <div className="animate-fadeIn w-full flex flex-col items-center flex-1 min-h-0">
       <div className="text-[40px] mb-1 animate-float-gentle">⚠️</div>
       <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         CONFIRA SEUS DADOS
@@ -525,7 +525,7 @@ function StepVSLLoading() {
   }, [router]);
 
   return (
-    <div className="animate-fadeIn w-full flex flex-col items-center pt-2 h-full">
+    <div className="animate-fadeIn w-full flex flex-col items-center pt-2 flex-1 min-h-0">
       <h2 className="text-copa-blue text-[32px] sm:text-4xl text-center mb-0 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>
         GERANDO SUA FIGURINHA
       </h2>
@@ -533,26 +533,15 @@ function StepVSLLoading() {
         Não saia dessa tela, leva até 2 minutos.
       </p>
 
-      {/* VÍDEO DO USUÁRIO */}
-      <div className="w-full max-w-[280px] aspect-[9/16] bg-black rounded-[16px] flex flex-col items-center justify-center text-white mb-6 shadow-xl relative overflow-hidden">
-        <video 
+      {/* VÍDEO VSL */}
+      <div className="w-full max-w-[280px] aspect-[9/16] bg-black rounded-[16px] mb-6 shadow-xl overflow-hidden">
+        <video
           className="w-full h-full object-cover"
-          src="/video.mp4" 
-          autoPlay 
-          muted 
+          src="/video.mp4"
+          autoPlay
           playsInline
-          loop
+          controls
         />
-        {/* Overlay controls */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-4 text-center">
-           <p className="text-[17px] mb-5 leading-tight px-4 text-white drop-shadow-md font-bold" style={{ fontFamily: "var(--font-body)" }}>Você já começou a assistir esse vídeo</p>
-           <button className="flex items-center justify-center gap-2 border border-white/40 bg-black/50 px-5 py-2.5 rounded-full text-[13px] mb-3 hover:bg-black/70 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
-             ▶ Continuar assistindo?
-           </button>
-           <button className="flex items-center justify-center gap-2 border border-white/40 bg-black/50 px-5 py-2.5 rounded-full text-[13px] hover:bg-black/70 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
-             ↺ Assistir do início?
-           </button>
-        </div>
       </div>
 
       <div className="mt-auto w-full flex flex-col items-center pb-2">
@@ -588,7 +577,7 @@ function QuizFlow() {
   const TOTAL = 4;
 
   const next = () => {
-    if (step < 5) setStep(step + 1); 
+    if (step < 5) setStep(step + 1);
   };
   const back = () => {
     if (step > 1) setStep(step - 1);
@@ -596,31 +585,19 @@ function QuizFlow() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen w-full bg-copa-yellow">
-      {/* Wrapper global para o quiz manter layout estrito max-w-md */}
-      <div className="w-full max-w-md mx-auto flex flex-col min-h-screen flex-1 relative">
-        
+    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow sm:justify-center sm:py-6">
+      <div className="w-full max-w-md mx-auto flex flex-col flex-1 sm:flex-none">
+
         {step <= 4 && <ProgressBar step={step} total={TOTAL} />}
 
-        {/* White Card flex-1 (preenche restante no mobile) */}
-        <div className="w-full flex-1 bg-white rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-6 shadow-2xl relative flex flex-col sm:my-6 sm:mx-auto">
+        <div className="w-full flex-1 sm:flex-none bg-white rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-6 shadow-2xl flex flex-col overflow-y-auto">
           {step === 1 && <StepNomeFoto onNext={next} />}
           {step === 2 && <StepNascimento onNext={next} onBack={back} />}
           {step === 3 && <StepClubeMedidas onNext={next} onBack={back} />}
           {step === 4 && <StepConfirmacao onNext={next} onBack={back} />}
           {step === 5 && <StepVSLLoading />}
+          {step <= 4 && <PaginationDots step={step} total={TOTAL} />}
         </div>
-
-        {step <= 4 && (
-          <div className="absolute bottom-0 left-0 w-full pb-4 sm:hidden bg-white z-0 pointer-events-none">
-            <PaginationDots step={step} total={TOTAL} />
-          </div>
-        )}
-        {step <= 4 && (
-          <div className="hidden sm:block">
-            <PaginationDots step={step} total={TOTAL} />
-          </div>
-        )}
       </div>
     </main>
   );
