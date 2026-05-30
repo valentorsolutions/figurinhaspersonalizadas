@@ -11,6 +11,7 @@ export interface QuizData {
   nascimento_ano: string;
   email: string;
   clube: string;
+  clubeCustom?: string;
   peso: string;
   altura: string;
 }
@@ -32,6 +33,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     nascimento_ano: "",
     email: "",
     clube: "",
+    clubeCustom: "",
     peso: "",
     altura: "",
   });
