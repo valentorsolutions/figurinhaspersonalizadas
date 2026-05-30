@@ -100,7 +100,7 @@ function ModalLoadingFoto({ isOpen, onComplete }: { isOpen: boolean; onComplete:
         <h3 className="text-copa-blue text-3xl mb-4 tracking-wide" style={{ fontFamily: "var(--font-titulo)" }}>CARREGANDO FOTO</h3>
         <div className="relative w-40 h-40 mx-auto rounded-2xl overflow-hidden mb-4 shadow-inner">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/aviso.png" alt="Loading" className="w-full h-full object-cover opacity-80" />
+          <img src="/giphy.gif" alt="Loading" className="w-full h-full object-cover opacity-80" />
         </div>
         <p className="text-gray-600 text-lg mb-6" style={{ fontFamily: "var(--font-body)" }}>
           Esse tem cara de jogador caro hein
@@ -223,7 +223,10 @@ function StepNascimento({ onNext, onBack }: { onNext: () => void; onBack: () => 
 
   const dias = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
   const meses = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
-  const anos = Array.from({ length: 20 }, (_, i) => String(new Date().getFullYear() - i));
+  
+  // ATUALIZAÇÃO DOS ANOS (ATÉ 1920)
+  const anoAtual = new Date().getFullYear();
+  const anos = Array.from({ length: anoAtual - 1920 + 1 }, (_, i) => String(anoAtual - i));
 
   const handleNext = () => {
     if (!data.nascimento_dia || !data.nascimento_mes || !data.nascimento_ano) { setError("Preencha a data"); return; }
@@ -321,6 +324,27 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
   const { data, setData } = useQuiz();
   const [error, setError] = useState("");
 
+  const TIMES_BRASILEIROS = [
+    "Flamengo",
+    "Corinthians",
+    "São Paulo",
+    "Palmeiras",
+    "Vasco da Gama",
+    "Cruzeiro",
+    "Grêmio",
+    "Internacional",
+    "Atlético Mineiro",
+    "Botafogo",
+    "Fluminense",
+    "Santos",
+    "Bahia",
+    "Sport Recife",
+    "Vitória",
+    "Athletico Paranaense",
+    "Coritiba",
+    "Outro"
+  ];
+
   const handleNext = () => {
     if (!data.clube.trim() || !data.peso.trim() || !data.altura.trim()) { setError("Preencha todos os campos"); return; }
     onNext();
@@ -338,14 +362,29 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
 
       <div className="w-full mb-4">
         <label className="text-copa-blue text-xs ml-1 block mb-1 tracking-wider" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE DO CORAÇÃO</label>
-        <input
-          type="text"
-          className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
-          placeholder="Digite o nome do clube..."
+        {/* SELECT PARA TIMES */}
+        <select
+          className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 text-gray-700 bg-white focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors appearance-none"
           style={{ fontFamily: "var(--font-body)" }}
           value={data.clube}
           onChange={(e) => { setData({ clube: e.target.value }); setError(""); }}
-        />
+        >
+          <option value="">Selecione o clube...</option>
+          {TIMES_BRASILEIROS.map(time => (
+            <option key={time} value={time}>{time}</option>
+          ))}
+        </select>
+        
+        {/* CASO 'Outro', mostra input de texto */}
+        {data.clube === "Outro" && (
+          <input
+            type="text"
+            className="w-full border-[1.5px] border-gray-200 rounded-[12px] px-4 py-3.5 mt-2 text-gray-700 focus:border-copa-blue focus:ring-2 focus:ring-copa-blue/20 outline-none transition-colors placeholder:text-gray-400"
+            placeholder="Digite o nome do clube..."
+            style={{ fontFamily: "var(--font-body)" }}
+            onChange={(e) => { setData({ clubeCustom: e.target.value }); setError(""); }}
+          />
+        )}
       </div>
 
       <div className="w-full grid grid-cols-2 gap-3 mb-6">
@@ -399,6 +438,8 @@ function StepClubeMedidas({ onNext, onBack }: { onNext: () => void; onBack: () =
 function StepConfirmacao({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { data } = useQuiz();
 
+  const clubeExibir = data.clube === "Outro" ? data.clubeCustom : data.clube;
+
   return (
     <div className="animate-fadeIn w-full flex flex-col items-center h-full">
       <div className="text-[40px] mb-1 animate-float-gentle">⚠️</div>
@@ -437,7 +478,7 @@ function StepConfirmacao({ onNext, onBack }: { onNext: () => void; onBack: () =>
         </div>
         <div className="flex justify-between items-center py-2.5">
           <span className="text-copa-blue text-sm tracking-widest" style={{ fontFamily: "var(--font-titulo)" }}>CLUBE</span>
-          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{data.clube}</span>
+          <span className="text-gray-800 text-[17px]" style={{ fontFamily: "var(--font-body)" }}>{clubeExibir}</span>
         </div>
       </div>
 
@@ -492,15 +533,26 @@ function StepVSLLoading() {
         Não saia dessa tela, leva até 2 minutos.
       </p>
 
-      {/* Placeholder de Vídeo */}
-      <div className="w-full max-w-[280px] aspect-[9/16] bg-[#7c3aed] rounded-[16px] flex flex-col items-center justify-center text-white mb-6 p-4 text-center shadow-xl">
-        <p className="text-[17px] mb-5 leading-tight px-4" style={{ fontFamily: "var(--font-body)" }}>Você já começou a assistir esse vídeo</p>
-        <button className="flex items-center justify-center gap-2 border border-white/40 bg-white/10 px-5 py-2.5 rounded-full text-[13px] mb-3 hover:bg-white/20 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
-          ▶ Continuar assistindo?
-        </button>
-        <button className="flex items-center justify-center gap-2 border border-white/40 bg-white/10 px-5 py-2.5 rounded-full text-[13px] hover:bg-white/20 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
-          ↺ Assistir do início?
-        </button>
+      {/* VÍDEO DO USUÁRIO */}
+      <div className="w-full max-w-[280px] aspect-[9/16] bg-black rounded-[16px] flex flex-col items-center justify-center text-white mb-6 shadow-xl relative overflow-hidden">
+        <video 
+          className="w-full h-full object-cover"
+          src="/video.mp4" 
+          autoPlay 
+          muted 
+          playsInline
+          loop
+        />
+        {/* Overlay controls */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 p-4 text-center">
+           <p className="text-[17px] mb-5 leading-tight px-4 text-white drop-shadow-md font-bold" style={{ fontFamily: "var(--font-body)" }}>Você já começou a assistir esse vídeo</p>
+           <button className="flex items-center justify-center gap-2 border border-white/40 bg-black/50 px-5 py-2.5 rounded-full text-[13px] mb-3 hover:bg-black/70 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
+             ▶ Continuar assistindo?
+           </button>
+           <button className="flex items-center justify-center gap-2 border border-white/40 bg-black/50 px-5 py-2.5 rounded-full text-[13px] hover:bg-black/70 transition-colors w-[200px]" style={{ fontFamily: "var(--font-body)" }}>
+             ↺ Assistir do início?
+           </button>
+        </div>
       </div>
 
       <div className="mt-auto w-full flex flex-col items-center pb-2">
@@ -544,13 +596,14 @@ function QuizFlow() {
   };
 
   return (
-    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow">
-      <div className="w-full max-w-lg mx-auto flex flex-col min-h-screen relative">
+    <main className="flex flex-col min-h-screen w-full bg-copa-yellow">
+      {/* Wrapper global para o quiz manter layout estrito max-w-md */}
+      <div className="w-full max-w-md mx-auto flex flex-col min-h-screen flex-1 relative">
         
         {step <= 4 && <ProgressBar step={step} total={TOTAL} />}
 
-        {/* White Card encostando nas laterais no mobile, com borda arredondada estilo app */}
-        <div className="w-full flex-1 bg-white rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl relative flex flex-col sm:mt-2 sm:mb-8 sm:mx-auto">
+        {/* White Card flex-1 (preenche restante no mobile) */}
+        <div className="w-full flex-1 bg-white rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-6 shadow-2xl relative flex flex-col sm:my-6 sm:mx-auto">
           {step === 1 && <StepNomeFoto onNext={next} />}
           {step === 2 && <StepNascimento onNext={next} onBack={back} />}
           {step === 3 && <StepClubeMedidas onNext={next} onBack={back} />}
@@ -559,7 +612,7 @@ function QuizFlow() {
         </div>
 
         {step <= 4 && (
-          <div className="absolute bottom-0 left-0 w-full pb-4 sm:hidden bg-white">
+          <div className="absolute bottom-0 left-0 w-full pb-4 sm:hidden bg-white z-0 pointer-events-none">
             <PaginationDots step={step} total={TOTAL} />
           </div>
         )}
