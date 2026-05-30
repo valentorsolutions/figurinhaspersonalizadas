@@ -585,19 +585,20 @@ function QuizFlow() {
   };
 
   return (
-    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow sm:justify-center sm:py-6">
-      <div className="w-full max-w-md mx-auto flex flex-col flex-1 sm:flex-none">
+    <main className="flex flex-col min-h-[100dvh] w-full bg-copa-yellow">
+      <div className="w-full max-w-md mx-auto flex flex-col flex-1 px-4 pt-3 pb-3">
 
         {step <= 4 && <ProgressBar step={step} total={TOTAL} />}
 
-        <div className="w-full flex-1 sm:flex-none bg-white rounded-t-[32px] sm:rounded-[32px] p-5 sm:p-6 shadow-2xl flex flex-col overflow-y-auto">
+        <div className="w-full flex-1 bg-white rounded-[32px] p-5 sm:p-6 shadow-2xl flex flex-col overflow-y-auto">
           {step === 1 && <StepNomeFoto onNext={next} />}
           {step === 2 && <StepNascimento onNext={next} onBack={back} />}
           {step === 3 && <StepClubeMedidas onNext={next} onBack={back} />}
           {step === 4 && <StepConfirmacao onNext={next} onBack={back} />}
           {step === 5 && <StepVSLLoading />}
-          {step <= 4 && <PaginationDots step={step} total={TOTAL} />}
         </div>
+
+        {step <= 4 && <PaginationDots step={step} total={TOTAL} />}
       </div>
     </main>
   );
